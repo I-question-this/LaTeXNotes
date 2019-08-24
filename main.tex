@@ -1,0 +1,80 @@
+\documentclass[journal]{IEEEtran}
+
+% Character Encoding Packages %%%%
+\usepackage[utf8]{inputenc}
+% Citation Packages %%%%
+\usepackage[backend=biber,sorting=none]{biblatex}
+\addbibresource{./bibliography.bib}
+% File Organplization Packages %%%%
+\usepackage{subfiles}
+% GRAPHICS RELATED PACKAGES ***
+\usepackage[pdftex]{graphicx}
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+% Sectioning Packages %%%%
+% https://tex.stackexchange.com/questions/60209/how-to-add-an-extra-level-of-sections-with-headings-below-subsubsection
+% hack to make it shut up
+\newcommand{\subparagraph}{}
+\usepackage{titlesec}
+% Makes it shut up about an error with sectionioning
+\usepackage{bookmark}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% URL Packages %%%%
+\usepackage{url}
+
+
+
+% Commands for when the subfile is compiled by it's self
+\newcommand{\onlyinsubfile}[1]{#1}
+\newcommand{\notinsubfile}[1]{}
+% Command to set the date in one place
+\newcommand{\notesDate}{NULL DATE}
+\newcommand{\notesEnd}{
+    \onlyinsubfile{\printbibliography}
+    % \notinsubfile{\section{\labDate}
+}
+% Command to set the title
+\newcommand{\notesTitle}{
+    \onlyinsubfile{
+      \title{Notes: \notesDate}
+      \date{\notesDate}
+      \maketitle
+    }
+    \notinsubfile{\subsection{\notesDate}}
+}
+% Section commands for notes
+\newcommand{\notesSection}[1]{
+    \onlyinsubfile{\subsection{#1}}
+    \notinsubfile{\subsubsection{#1}}
+}
+\newcommand{\notesSubSection}[1]{
+    \onlyinsubfile{\subsubsection{#1}}
+    \notinsubfile{\paragraph{#1}}
+}
+
+% Title Information
+\title{Notes}
+\author{Tyler Westland}
+\date{\today}
+
+% Document
+\begin{document}
+    % Commands for when the subfile is compiled as part of the main document
+    \renewcommand{\onlyinsubfile}[1]{}
+    \renewcommand{\notinsubfile}[1]{#1}
+    
+    % Title
+    \maketitle
+    \tableofcontents 
+
+    % Notes
+    \subfile{./allNotes}
+    
+    % References
+    \printbibliography
+\end{document}
