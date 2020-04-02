@@ -23,7 +23,7 @@ if [ "$monthNumber" -lt "5" ]; then
   echo "$yearNumber--01--04--Spring"
 elif [ "$monthNumber" -lt "9" ]; then
   echo "$yearNumber--05--08--Summer"
-elif [ "$monthNumber" -lt "12" ]; then
+elif [ "$monthNumber" -le "12" ]; then
   echo "$yearNumber--09--12--Fall"
 else
   >&2 echo "$0: Month greater than 12"

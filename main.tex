@@ -2,33 +2,65 @@
 
 % Character Encoding Packages %%%%
 \usepackage[utf8]{inputenc}
+% Math packages
+\usepackage{amsmath}
 % Citation Packages %%%%
-\usepackage[backend=biber,sorting=none]{biblatex}
+\usepackage[backend=biber,sorting=none,bibencoding=utf8]{biblatex}
 \addbibresource{./bibliography.bib}
+% *** Code Blocks Packages ***
+\usepackage{listings}
+\usepackage{xcolor}
+
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1.0,1.0,1.0}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false, 
+  breaklines=true,          
+  captionpos=b,
+  keepspaces=true,
+  numbersep=5pt,
+  numbers=left,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+%"mystyle" code listing set
+\lstset{style=mystyle}
 % File Organplization Packages %%%%
 \usepackage{subfiles}
 % GRAPHICS RELATED PACKAGES ***
 \usepackage[pdftex]{graphicx}
 \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-% Sectioning Packages %%%%
-% https://tex.stackexchange.com/questions/60209/how-to-add-an-extra-level-of-sections-with-headings-below-subsubsection
-% hack to make it shut up
-\newcommand{\subparagraph}{}
-\usepackage{titlesec}
-% Makes it shut up about an error with sectionioning
-\usepackage{bookmark}
-
-\setcounter{secnumdepth}{4}
-
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\usepackage{float}
 % URL Packages %%%%
 \usepackage{url}
+\usepackage{hyperref}
+% Making a "SubSubSubSection" with paragraph %%%%
+% https://tex.stackexchange.com/a/60218
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+            {-2.5ex\@plus -1ex \@minus -.25ex}%
+            {1.25ex \@plus .25ex}%
+            {\normalfont\normalsize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{4} % how many sectioning levels to assign numbers to
+\setcounter{tocdepth}{4}    % how many sectioning levels to show in ToC
 
 
-
+% Citation commands
+\newcommand{\notesCite}[1]{\citetitle{#1}--\citeyear{#1}\cite{#1}}
 % Commands for when the subfile is compiled by it's self
 \newcommand{\onlyinsubfile}[1]{#1}
 \newcommand{\notinsubfile}[1]{}
@@ -45,20 +77,58 @@
       \date{\notesDate}
       \maketitle
     }
-    \notinsubfile{\subsection{\notesDate}}
+    \notinsubfile{\section{\notesDate}}
 }
 % Section commands for notes
 \newcommand{\notesSection}[1]{
+    \onlyinsubfile{\section{#1}}
+    \notinsubfile{\subsection{#1}}
+}
+\newcommand{\notesSubSection}[1]{
     \onlyinsubfile{\subsection{#1}}
     \notinsubfile{\subsubsection{#1}}
 }
-\newcommand{\notesSubSection}[1]{
+\newcommand{\notesSubSubSection}[1]{
     \onlyinsubfile{\subsubsection{#1}}
     \notinsubfile{\paragraph{#1}}
 }
 
+% Hours Counter that resets after each section, which happens to be a single week
+\usepackage{xparse}
+\ExplSyntaxOn
+  \fp_new:N \g_weekly_hours_fp
+  \NewDocumentCommand{\AddWeeklyHours}{m}{
+    \fp_gadd:Nn \g_weekly_hours_fp {#1}
+  }
+  \NewDocumentCommand{\ResetWeeklyHours}{}{
+    \fp_zero:N \g_weekly_hours_fp 
+  }
+  \NewDocumentCommand{\DisplayWeeklyHours}{}{
+    \fp_to_decimal:N \g_weekly_hours_fp
+  }
+
+  \fp_new:N \g_lifetime_hours_fp
+  \NewDocumentCommand{\AddLifeTimeHours}{}{
+    \fp_gadd:Nn \g_lifetime_hours_fp \g_weekly_hours_fp
+  }
+  \NewDocumentCommand{\DisplayLifeTimeHours}{}{
+    \fp_to_decimal:N \g_lifetime_hours_fp
+  }
+
+  \fp_new:N \g_hours_required_fp
+  \NewDocumentCommand{\AddRequiredHours}{}{
+    \fp_gadd:Nn \g_hours_required_fp {20}
+  }
+  \NewDocumentCommand{\DisplayHoursRequired}{}{
+    \fp_to_decimal:N \g_hours_required_fp
+  }
+\ExplSyntaxOff
+\newcommand{\hoursWorkedToday}[1]{
+    \AddWeeklyHours{#1}
+    Hours worked today: #1
+}
 % Title Information
-\title{Notes}
+\title{Daily Notes}
 \author{Tyler Westland}
 \date{\today}
 
@@ -71,6 +141,8 @@
     % Title
     \maketitle
     \tableofcontents 
+
+    \clearpage
 
     % Notes
     \subfile{./allNotes}
