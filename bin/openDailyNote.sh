@@ -8,8 +8,9 @@ TEX_PATH=$($PROJECT_PATH/bin/dailyNotePath.sh "$PROJECT_PATH" "$DATE")
 
 if ! test -f "$TEX_PATH"; then
   mkdir -p "$PROJECT_PATH/tex/$($PROJECT_PATH/bin/semesterName.sh "$DATE")/$($PROJECT_PATH/bin/weekName.sh "$DATE")"
-  DATE_TITLE=$(date +'%A: %B %-d, %Y' -d "$DATE")
-  cat $PROJECT_PATH/templates/daily.tex | sed "s/DATE_REPLACE/$DATE_TITLE/g" > $TEX_PATH
+  ISO_DATE=$(date -I -d "$DATE")
+  TEMPLATE=$PROJECT_PATH/templates/day.tex
+  $PROJECT_PATH/bin/prepare_todays_note.py $TEMPLATE $TEX_PATH --date $ISO_DATE
   $PROJECT_PATH/bin/createAllNotesSubfile.py --project_path $PROJECT_PATH
 fi
 

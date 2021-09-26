@@ -1,0 +1,42 @@
+{
+  "day_start": "08:00",
+  "day_end": "22:00",
+  "tasks": [
+    {
+      "name": "Make Tea and Arrange Podcasts",
+      "recur": ["DAILY"],
+      "usual_start": "08:00",
+      "usual_end": "08:30"
+    },
+    {
+      "name": "Jog and Lift",
+      "recur": ["DAILY"],
+      "usual_start": "08:30",
+      "usual_end": "09:30"
+    },
+    {
+      "name": "Shower",
+      "recur": ["DAILY"],
+      "usual_start": "09:30",
+      "usual_end": "10:00"
+    },
+    {
+      "name": "Brunch",
+      "recur": ["DAILY"],
+      "usual_start": "10:00",
+      "usual_end": "10:45"
+    },
+    {
+      "name": "Daily Work Meeting",
+      "recur": ["MONDAY", "TUESDAY", "THURSDAY", "FRIDAY"],
+      "usual_start": "11:00",
+      "usual_end": "12:00"
+    },
+    {
+      "name": "Daily Work Meeting",
+      "recur": ["WEDNESDAY"],
+      "usual_start": "13:00",
+      "usual_end": "14:00"
+    }
+  ]
+}
